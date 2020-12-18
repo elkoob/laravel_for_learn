@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class pid_Controller extends Controller
 {
@@ -19,7 +21,7 @@ class pid_Controller extends Controller
      */
     public function index()
     {
-        //
+        return view('pid.index');
     }
 
     /**
@@ -40,7 +42,20 @@ class pid_Controller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request , [
+            'name'=>'required|string|max:50',
+            'email' => 'required|string|email|max:255',
+//            'id_code' => 'alpha_num',
+//            'bith'=>''
+        ]);
+
+        $u=User::find(Auth::user()->id);
+        $u->name = $request->name ;
+        $u->email = $request->email ;
+        $u->birth = $request->birth ;
+        $u->id_code = $request->id_code ;
+        $u->update();
+        return redirect()->route('pid.index')->with('success' , 'update success');
     }
 
     /**
